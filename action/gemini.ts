@@ -2,12 +2,17 @@
 import ai from "@/lib/geminiAi";
 import { Type } from "@google/genai";
 
-export const analyzeImage = async (imgFile:File,chatMessage:string) => {
-    if(!imgFile) return null
+export const analyzeImage = async (formData:FormData) => {
+    const imgFile = formData.get('imgFile') as File;
+    const chatMessage = formData.get('chatMsg') as string;
+    
+    if(!imgFile || !chatMessage) {
+        return {message: 'credentials required',data:null}
+    }
 
     const fileSizeInMb = imgFile.size / (1024*1024);
 
-    if(fileSizeInMb > 10 ){
+    if(fileSizeInMb > 1 ){
         return {message: 'size file to large!',data:null}
     }
     
@@ -53,7 +58,7 @@ export const analyzeImage = async (imgFile:File,chatMessage:string) => {
             }
         });
 
-        return {message: 'size file to large!',data: JSON.parse(result.text as string)};
+        return {message: 'sucessfully analyze',data: JSON.parse(result.text as string)};
         
 
     } catch (error) {

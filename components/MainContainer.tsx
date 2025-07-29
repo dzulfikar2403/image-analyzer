@@ -22,10 +22,11 @@ const MainContainer = () => {
     setLoading(true);
     try {
       if (image) {
-        const res = await analyzeImage(
-          image,
-          "analyze this image with detail information and give the related tag and also some related question"
-        );
+        const formData = new FormData();
+        formData.append('imgFile',image);
+        formData.append('chatMsg',"analyze this image with detail information and give the related tag and also some related question");
+
+        const res = await analyzeImage(formData);
 
         if (res?.data) {
           setResult((prev) => ({
@@ -53,7 +54,7 @@ const MainContainer = () => {
         </h1>
 
         <DropzoneInput fileImg={image} setFileImg={setImage} />
-
+        <small>*Maximum file size is 1mb </small>        
         <Button
           className="bg-indigo-700 w-full my-6 text-white transition-all hover:bg-indigo-600 font-medium"
           disabled={!image || loading}
